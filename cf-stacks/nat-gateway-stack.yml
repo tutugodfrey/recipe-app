@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  Create a NAT Gateway that allow EC2 in private subnets to access the internet
+
+Resources:
+  NatGateway1EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+  
+  NatGateway2EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+  
+  NatGateway1:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatGateway1EIP.AllocationId
+      SubnetId: 
+        Fn::ImportValue: PublicSubnetTrusted
+  
+  NatGateway2:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatGateway2EIP.AllocationId
+      SubnetId:
+        Fn::ImportValue: PublicSubnetUnTrusted
